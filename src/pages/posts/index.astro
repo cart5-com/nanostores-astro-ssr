@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PostsComponent from "../../components/PostsComponent.astro";
+import PostsVue from "../../components/PostsVue.vue";
+import { loadPosts } from "../../stores/postsStore";
+import { $posts } from "../../stores/postsStore";
+const initialPosts = await loadPosts();
+$posts.set(initialPosts || []);
+---
+
+<Layout>
+    <!-- Need to set initial posts in the store to prevent hydration errors
+    and prevent reloading the same data on the client side. -->
+	<!-- 
+    <script define:vars={{ initialPosts }}>
+        // we need JSON data to set initial store
+        // but we can not import store here
+        window.initialPosts = initialPosts;
+    </script> 
+    <script>
+        import { $posts } from "../../stores/postsStore";
+        $posts.set(window.initialPosts || []);
+    </script> 
+    -->
+	<h1>Posts</h1>
+	<hr />
+    <!-- data-initial-posts is used to set initial posts in the store -->
+    <!-- this looks better than window.initialPosts -->
+	<div
+		data-initial-posts={JSON.stringify(initialPosts)}
+		id="posts-container"
+		style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+		<script>
+			import { $posts } from "../../stores/postsStore";
+            const containerDiv = document.querySelector<HTMLDivElement>("#posts-container");
+            const initialPosts = JSON.parse(containerDiv?.dataset.initialPosts || "[]");
+			$posts.set(initialPosts || []);
+		</script>
+		<div>
+			<h2>Vue:</h2>
+			<PostsVue client:visible />
+		</div>
+		<div>
+			<h2>Astro</h2>
+			<PostsComponent />
+		</div>
+	</div>
+</Layout>
