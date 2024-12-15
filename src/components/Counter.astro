@@ -1,0 +1,31 @@
+---
+import { $counter } from "../stores/counterStore";
+const counterInitial = $counter.get();
+---
+
+<script>
+	import { $counter, increment, decrement } from "../stores/counterStore";
+    
+    // runs only when the value changes
+    // $counter.listen((value) => {});
+	$counter.subscribe((value) => {
+        // runs immediately and listens for changes
+        document.querySelectorAll(".counter").forEach((el) => {
+            if(value){
+                el.textContent = String(value);
+            }
+        });
+	});
+	document.querySelectorAll(".increment").forEach((el) => {
+        el.addEventListener("click", increment);
+    });
+	document.querySelectorAll(".decrement").forEach((el) => {
+        el.addEventListener("click", decrement);
+    });
+</script>
+
+<button class="increment">Increment</button>
+<button class="decrement">Decrement</button>
+
+<!-- $counter value is null but counterInitial it will be 0 in viewsource because we wait for it-->
+<p>Counter: <span class="counter">{counterInitial}</span></p>

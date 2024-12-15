@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostsComponent from '../components/PostsComponent.astro';
+import PostsVue from '../components/PostsVue.vue';
+import { loadPosts } from "../stores/postsStore";
+import { $posts } from "../stores/postsStore";
+const initialPosts = await loadPosts();
+$posts.set(initialPosts || []);
+---
+
+<Layout>
+    <script define:vars={{ initialPosts }}>
+        // we need JSON data to set initial store
+        // but we can not import store here
+        window.initialPosts = initialPosts;
+    </script>
+    <script>
+        import { $posts } from "../stores/postsStore";
+        $posts.set(window.initialPosts || []);
+    </script>
+	<h1>Posts</h1>
+    <hr>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <h2>Vue:</h2>
+            <PostsVue client:visible />
+        </div>
+        <div>
+            <h2>Astro</h2>
+            <PostsComponent/>
+        </div>
+    </div>
+</Layout>

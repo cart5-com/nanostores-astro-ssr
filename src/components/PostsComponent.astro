@@ -1,0 +1,46 @@
+---
+// load posts for ssr
+import { $posts } from "../stores/postsStore";
+const initialPosts = $posts.get();
+---
+
+<script>
+	import { $posts, addPost } from "../stores/postsStore";
+	// ssr writes the initialPosts to the dom
+	// we listen for changes only on the client
+	$posts.listen((posts) => {
+		const postsList = document.querySelector("#posts-list");
+		if (postsList && posts.length) {
+			postsList.innerHTML = posts
+				.map((post, index) => `<li><h3>${index + 1}) ${post.title}</h3><p>${post.body}</p></li>`).join("");
+		}
+	});
+
+	const addNewPost = () => {
+		addPost({
+			id: 5,
+			title: "New Post",
+			body: "This is a new post",
+			userId: 1,
+		});
+	};
+	const addNewPostButton = document.querySelector("#add-new-post");
+	if (addNewPostButton) {
+		addNewPostButton.addEventListener("click", addNewPost);
+	}
+</script>
+
+<button id="add-new-post">Add New Post</button>
+<ul id="posts-list">
+	{
+		initialPosts &&
+			initialPosts.map((post, index) => (
+				<li>
+					<h3>
+						{index + 1}) {post.title}
+					</h3>
+					<p>{post.body}</p>
+				</li>
+			))
+	}
+</ul>
