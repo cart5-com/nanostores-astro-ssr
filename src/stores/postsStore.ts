@@ -4,6 +4,12 @@ import { type Post } from "../types/Post";
 
 // Create posts store
 export const $posts = atom<Post[]>([]);
+export const $currentPost = atom<Post | null>(null);
+
+export function loadPost(id: number) {
+    return fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+        .then((response) => response.json())
+}
 
 // Actions
 export async function loadPosts() {

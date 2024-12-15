@@ -12,7 +12,7 @@ const initialPosts = $posts.get();
 		const postsList = document.querySelector("#posts-list");
 		if (postsList && posts.length) {
 			postsList.innerHTML = posts
-				.map((post, index) => `<li><h3>${index + 1}) ${post.title}</h3><p>${post.body}</p></li>`).join("");
+				.map((post, index) => `<li><h3>${index + 1}) ${post.title}</h3><p>${post.body}</p><a href="/posts/${post.id}">Read more</a></li>`).join("");
 		}
 	});
 
@@ -40,6 +40,7 @@ const initialPosts = $posts.get();
 						{index + 1}) {post.title}
 					</h3>
 					<p>{post.body}</p>
+					<a href={`/posts/${post.id}`}>Read more</a>
 				</li>
 			))
 	}

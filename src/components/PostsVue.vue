@@ -21,6 +21,7 @@ const addPostHandler = () => {
         <li v-for="(post, index) in posts" :key="post.id">
             <h3>{{ index + 1 }}) {{ post.title }}</h3>
             <p>{{ post.body }}</p>
+            <a :href="`/posts/${post.id}`">Read more</a>
         </li>
     </ul>
 </template>
